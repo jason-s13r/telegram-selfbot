@@ -1,6 +1,7 @@
 const { getMessageDetails } = require('../io');
+const { handshake } = require('../handshake');
 
-module.exports = function(message, update, client, handshake) {
+module.exports = function(message, update, client) {
   return function(cli, options) {
     cli
       .command('info', 'get information about a message')

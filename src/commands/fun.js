@@ -1,8 +1,11 @@
-const { JASON, TANNER, DOMOTHY, HORSESHOE, SANDBOX } = require('../constants');
-const { sendMessage, getMessageDetails } = require('../io');
 const bs58 = require('bs58');
 
-module.exports = function(message, update, client, handshake) {
+const { JASON, TANNER, DOMOTHY, HORSESHOE, SANDBOX } = require('../constants');
+const { sendMessage, getMessageDetails } = require('../io');
+const { handshake } = require('../handshake');
+
+
+module.exports = function(message, update, client) {
   return function(cli, options) {
     cli
       .command('countdown [counter]')

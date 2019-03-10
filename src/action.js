@@ -19,12 +19,10 @@ const jason = {
   aliases: {},
   isUser: user_id => user_id === JASON,
   getCommandLineString(value) {
-    const match = value.match(/^\.(.*)$/);
-    if (!match) {
-      return undefined;
+    if (value[0] === '.') {
+      return value.substring(1);
     }
-    const [full, remainder] = match;
-    return remainder;
+    return undefined;
   },
   commands(message, update, client) {
     const self = this;

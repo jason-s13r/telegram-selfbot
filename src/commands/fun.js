@@ -29,5 +29,38 @@ module.exports = function(message, update, client) {
         this.log(`${handshake.prefix()}${command}`);
         cb();
       });
+
+      cli
+        .command('larp [words...]')
+        .option('-e, --encoded')
+        .option('-h, --horseshoe')
+        .option('-s, --sandbox')
+        .option('-b, --bwb')
+        .option('-d, --dm')
+        .action(async function(args, cb = () => {}) {
+          const words = []
+            .concat(args.words || [])
+            .concat(args.stdin || [])
+            .join(' ');
+          let destination = '';
+          if (args.options.horseshoe) {
+            destination = ' ~ HORSESHOE';
+          }
+          if (args.options.sandbox) {
+            destination = ' ~ SANDBOX';
+          }
+          if (args.options.bwb) {
+            destination = ' ~ BWB';
+          }
+          if (args.options.dm) {
+            destination = ' ~ DM';
+          }
+          let commandLine = 'echo ' + words + destination;
+          if (args.options.encoded) {
+            commandLine = '0' + bs58.encode(Buffer.from(commandLine));
+          }
+          this.log(handshake.prefix() + commandLine);
+          cb();
+        });
   };
 };

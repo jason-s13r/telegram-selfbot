@@ -5,11 +5,11 @@ const { JASON, TANNER, SANDBOX, HANDSHAKE } = require('./constants');
 const { sendMessage } = require('./io');
 
 class Handshake {
-    constructor() {
-        this.secret = otplib.authenticator.generateSecret().substring(0, 8);
-        this.initiator = JASON;
-        this.nonce = 0;
-    }
+  constructor() {
+    this.secret = otplib.authenticator.generateSecret().substring(0, 8);
+    this.initiator = JASON;
+    this.nonce = 0;
+  }
 
   execute(key) {
     this.secret = key;
@@ -22,7 +22,7 @@ class Handshake {
     this.initiator = TANNER;
     return undefined;
   }
-  
+
   getToken() {
     const token = otplib.hotp.generate(this.secret, this.nonce++);
     return token;
@@ -93,7 +93,7 @@ class Handshake {
       });
     };
   }
-};
+}
 
 module.exports.Handshake = Handshake;
 module.exports.handshake = new Handshake();

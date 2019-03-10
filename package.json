@@ -11,7 +11,9 @@
   "license": "ISC",
   "dependencies": {
     "bs58": "^4.0.1",
+    "capture-console": "^1.0.1",
     "minimist": "^1.2.0",
+    "otplib": "^10.0.1",
     "tdl": "^5.2.0",
     "vorpal": "^1.12.0"
   }

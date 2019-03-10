@@ -1,4 +1,4 @@
-const { JASON, TANNER, DOMOTHY, HORSESHOE, HORSESHOE_BOT } = require('../constants');
+const { JASON, TANNER, DOMOTHY, HORSESHOE, SANDBOX } = require('../constants');
 const { sendMessage, getMessageDetails } = require('../io');
 
 module.exports = function(message, update, client) {
@@ -17,12 +17,20 @@ module.exports = function(message, update, client) {
     if (args.options.domothy) {
       chat_id = DOMOTHY;
     }
+    if (args.options.sandbox) {
+      chat_id = SANDBOX;
+    }
     await sendMessage(client, chat_id, undefined, stdin);
   };
 
   return function(vorpal, options) {
     vorpal.command('echo [words...]').action(function(args, cb = (() => {})) {
       this.log(args.words.join(' '));
+      cb();
+    });
+
+    vorpal.command('ping').action(function(args, cb = (() => {})) {
+      this.log('pong');
       cb();
     });
 
@@ -44,6 +52,7 @@ module.exports = function(message, update, client) {
       .option('-h, --horseshoe', 'redirect to horseshoe')
       .option('-j, --jason', 'redirect to jason')
       .option('-t, --tanner', 'redirect to tanner')
+      .option('-s, --sandbox', 'redirect to sandbox')
       .action(async function(args, cb = (() => {})) {
         this.log('');
         await forward(args);
@@ -56,6 +65,7 @@ module.exports = function(message, update, client) {
       .option('-h, --horseshoe', 'copy to horseshoe')
       .option('-j, --jason', 'copy to jason')
       .option('-t, --tanner', 'copy to tanner')
+      .option('-s, --sandbox', 'redirect to sandbox')
       .action(async function(args, cb = (() => {})) {
         this.log(args.stdin.join(' '));
         await forward(args);

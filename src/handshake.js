@@ -88,7 +88,13 @@ class Handshake {
           .map(offset => `token ${offset}: ${otplib.hotp.generate(self.secret, self.nonce + offset)}`)
           .join('\n');
         const text = `secret: ${self.secret}\ncount: ${self.nonce}\ninitiator: ${initiator}\n${tokens}`;
-        await sendMessage(client, SANDBOX, undefined, text);
+        if (message.chat_id === HANDSHAKE || message.chat_id === SANDBOX) {
+          message.id = undefined;
+          this.log(text);
+          cb();
+          return;
+        }
+        await sendMessage(client, HANDSHAKE, undefined, text);
         cb();
       });
     };

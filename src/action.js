@@ -1,10 +1,8 @@
-const parseArgs = require('minimist');
-const otplib = require('otplib');
 const bs58 = require('bs58');
 const Vorpal = require('vorpal');
 const { capture } = require('./capture');
 
-const { JASON, TANNER, SANDBOX, HANDSHAKE } = require('./constants');
+const { JASON } = require('./constants');
 const { sendMessage } = require('./io');
 const { handshake } = require('./handshake');
 const cliModules = {
@@ -13,7 +11,6 @@ const cliModules = {
   ioFactory: require('./commands/io'),
   funFactory: require('./commands/fun')
 };
-
 
 const jason = {
   aliases: {},
@@ -126,14 +123,19 @@ const runCli = async (user, update, client) => {
 };
 
 module.exports.updateNewMessage = (update, client) => {
-  const { message } = update;
-  switch (message.content._) {
+  switch (update.message.content._) {
+    case 'messageAnimation':
+    case 'messagePhoto':
+    case 'messageVideo':
+      update.message.content.text = update.message.content.caption;
+      break;
     case 'messageText':
-      runCli(jason, update, client);
-      runCli(tanner, update, client);
       break;
     default:
-      console.error(`[act.updateNewMessage(${message.content._})]`, message);
-      break;
+      console.error(`[act.updateNewMessage(${update.message.content._})]`);
+      return;
   }
+
+  runCli(jason, update, client);
+  runCli(tanner, update, client);
 };

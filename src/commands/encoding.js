@@ -1,4 +1,5 @@
 const bs58 = require('bs58');
+const { gzip, ungzip } = require('node-gzip');
 
 const tr = (input, set1, set2) => {
   return input.replace(new RegExp(`([${set1}])`, 'ig'), function(value) {
@@ -68,15 +69,50 @@ module.exports = function(message, update, client) {
         cb();
       });
 
-    cli.command('reverse', 'reverse text of stdin').action(function(args, cb = () => {}) {
-      this.log(
-        args.stdin
-          .join(' ')
-          .split('')
-          .reverse()
-          .join('')
-      );
-      cb();
-    });
+    cli
+      .command('reverse', 'reverse text of stdin')
+      .alias('tac')
+      .action(function(args, cb = () => {}) {
+        this.log(
+          args.stdin
+            .join(' ')
+            .split('')
+            .reverse()
+            .join('')
+        );
+        cb();
+      });
+
+    cli
+      .command('gzip', 'gzip stdin into base64')
+      .option('--base58')
+      .option('-d, --decompress')
+      .action(async function(args, cb = () => {}) {
+        const stdin = args.stdin.join(' ');
+        if (args.options.decompress) {
+          try {
+            let decoded = Buffer.from(stdin, 'base64');
+            if (args.options.base58) {
+              decoded = bs58.decode(stdin);
+            }
+            const decompressed = await ungzip(decoded);
+            this.log(decompressed.toString());
+          } catch (e) {
+            this.log(e.message);
+          }
+          return cb();
+        }
+        try {
+          const compressed = await gzip(stdin);
+          let encoded = compressed.toString('base64');
+          if (args.options.base58) {
+            encoded = bs58.encode(compressed);
+          }
+          this.log(encoded);
+        } catch (e) {
+          this.log(e.message);
+        }
+        return cb();
+      });
   };
 };

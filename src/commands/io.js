@@ -24,18 +24,20 @@ module.exports = function(message, update, client) {
   };
 
   return function(vorpal, options) {
-    vorpal.command('echo [words...]').action(function(args, cb = (() => {})) {
-      this.log(args.words.join(' '));
-      cb();
-    });
+    vorpal
+      .command('echo [words...]')
+      .alias('say')
+      .action(function(args, cb = () => {}) {
+        this.log(args.words.join(' '));
+        cb();
+      });
 
-    vorpal.command('ping').action(function(args, cb = (() => {})) {
+    vorpal.command('ping').action(function(args, cb = () => {}) {
       this.log('pong');
       cb();
     });
 
-    vorpal.command('cat', 'get replied message text to stdout.')
-    .action(async function(args, cb = (() => {})) {
+    vorpal.command('cat', 'get replied message text to stdout.').action(async function(args, cb = () => {}) {
       const lookupId = message.reply_to_message_id || message.id;
       const lookup = await getMessageDetails(client, message.chat_id, lookupId);
       try {
@@ -47,13 +49,14 @@ module.exports = function(message, update, client) {
     });
 
     vorpal
-      .command('> [chat_id]', 'redirect a message to chat_id')
+      .command('forward [chat_id]', 'redirect a message to chat_id')
       .option('-d, --domothy', 'redirect to domothy')
       .option('-h, --horseshoe', 'redirect to horseshoe')
       .option('-j, --jason', 'redirect to jason')
       .option('-t, --tanner', 'redirect to tanner')
       .option('-s, --sandbox', 'redirect to sandbox')
-      .action(async function(args, cb = (() => {})) {
+      .alias('>')
+      .action(async function(args, cb = () => {}) {
         this.log('');
         await forward(args);
         cb();
@@ -66,7 +69,7 @@ module.exports = function(message, update, client) {
       .option('-j, --jason', 'copy to jason')
       .option('-t, --tanner', 'copy to tanner')
       .option('-s, --sandbox', 'redirect to sandbox')
-      .action(async function(args, cb = (() => {})) {
+      .action(async function(args, cb = () => {}) {
         this.log(args.stdin.join(' '));
         await forward(args);
         cb();

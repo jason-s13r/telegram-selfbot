@@ -19,14 +19,13 @@ module.exports = function(message, update, client) {
         if (!counter) {
           return cb();
         }
-        const e = args.options.e ? '58' : '';
-        const command = `countdown${e} ${counter - 1}`;
+        const e = args.options.e ? '-58' : '';
+        const prefix = handshake.prefix();
+        let commandLine = `${prefix}countdown${e} ${counter - 1}`;
         if (e) {
-          const encoded = bs58.encode(Buffer.from(command));
-          this.log(`${handshake.prefix()}0${encoded}`);
-          return cb();
+          commandLine = 'l' + bs58.encode(Buffer.from(commandLine));
         }
-        this.log(`${handshake.prefix()}${command}`);
+        this.log(commandLine);
         cb();
       });
 
@@ -55,11 +54,11 @@ module.exports = function(message, update, client) {
           if (args.options.dm) {
             destination = ' ~ DM';
           }
-          let commandLine = 'echo ' + words + destination;
+          let commandLine = `${handshake.prefix()}echo ${words}${destination}`;
           if (args.options.encoded) {
-            commandLine = '0' + bs58.encode(Buffer.from(commandLine));
+            commandLine = 'l' + bs58.encode(Buffer.from(commandLine));
           }
-          this.log(handshake.prefix() + commandLine);
+          this.log(commandLine);
           cb();
         });
   };

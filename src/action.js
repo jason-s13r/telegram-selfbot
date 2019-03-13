@@ -9,7 +9,8 @@ const cliModules = {
   adminFactory: require('./commands/admin'),
   encodingFactory: require('./commands/encoding'),
   ioFactory: require('./commands/io'),
-  funFactory: require('./commands/fun')
+  funFactory: require('./commands/fun'),
+  utilFactory: require('./commands/utils')
 };
 
 const jason = {
@@ -29,6 +30,7 @@ const jason = {
       cli.use(cliModules.ioFactory(message, update, client));
       cli.use(cliModules.encodingFactory(message, update, client));
       cli.use(cliModules.funFactory(message, update, client));
+      cli.use(cliModules.utilFactory(message, update, client));
 
       Object.keys(self.aliases).forEach(alias => {
         const command = cli.find(self.aliases[alias]);
@@ -64,7 +66,14 @@ const tanner = {
     if (/^\.handshake.*$/.test(value)) {
       return value.substring(1);
     }
-    const match = value.match(/^([01])([0-9]{6})(.+)$/);
+
+    let decoded = value;
+
+    if (value[0] === 'l') {
+      decoded = bs58.decodeUnsafe(value.substring(1)).toString('ascii') || value;
+    }
+
+    const match = decoded.match(/^([01])([0-9]{6})(.+)$/);
     if (!match) {
       return undefined;
     }
@@ -75,14 +84,7 @@ const tanner = {
       return undefined;
     }
 
-    try {
-      if (remainder[0] === '0') {
-        return bs58.decode(remainder.substring(1)).toString('ascii');
-      }
-      return remainder;
-    } catch (e) {
-      return remainder;
-    }
+    return remainder;
   },
   commands(message, update, client) {
     return function(cli, options) {
@@ -90,6 +92,7 @@ const tanner = {
       cli.use(cliModules.ioFactory(message, update, client, handshake));
       cli.use(cliModules.encodingFactory(message, update, client, handshake));
       cli.use(cliModules.funFactory(message, update, client, handshake));
+      cli.use(cliModules.utilFactory(message, update, client));
     };
   }
 };

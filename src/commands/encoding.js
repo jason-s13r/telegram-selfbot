@@ -26,7 +26,7 @@ module.exports = function(message, update, client) {
     });
 
     cli
-      .command('lolcryption', 'enlolcrypt or delolcrypt stdin')
+      .command('lolcryption')
       .option('-d, --delolcrypt')
       .action(function(args, cb = () => {}) {
         const set1 = 'aeioubcdfghjklmnpqrstvwxyz';
@@ -57,7 +57,7 @@ module.exports = function(message, update, client) {
       });
 
     cli
-      .command('base58', 'encode stdin to base58')
+      .command('base58')
       .option('-d', '--decode')
       .action(function(args, cb = () => {}) {
         const stdin = args.stdin.join(' ');
@@ -70,7 +70,7 @@ module.exports = function(message, update, client) {
       });
 
     cli
-      .command('reverse', 'reverse text of stdin')
+      .command('reverse')
       .alias('tac')
       .action(function(args, cb = () => {}) {
         this.log(
@@ -84,7 +84,7 @@ module.exports = function(message, update, client) {
       });
 
     cli
-      .command('gzip', 'gzip stdin into base64')
+      .command('gzip')
       .option('--base58')
       .option('-d, --decompress')
       .action(async function(args, cb = () => {}) {

@@ -74,11 +74,11 @@ class Handshake {
         .option('-e, --encoded', 'base58 encode the command string')
         .action(function(args, cb = () => {}) {
           const prefix = self.prefix();
-          let commandLine = args.stdin.join(' ');
+          let commandLine = prefix + args.stdin.join(' ');
           if (args.options.encoded) {
-            commandLine = '0' + bs58.encode(Buffer.from(commandLine));
+            commandLine = 'l' + bs58.encode(Buffer.from(commandLine));
           }
-          this.log(`${prefix}${commandLine}`);
+          this.log(commandLine);
           cb();
         });
 

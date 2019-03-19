@@ -28,7 +28,7 @@ module.exports = function(message, update, client) {
         }
         this.log(
           [
-            `id: ${lookup.id}`,
+            `id: ${BigInt(lookup.id) >> BigInt(20)} (${lookup.id})`,
             `user_id: ${lookup.sender_user_id}`,
             `chat_id: ${lookup.chat_id}`
           ].join('\n')

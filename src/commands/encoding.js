@@ -1,6 +1,7 @@
 const bs58 = require('bs58');
 const { gzip, ungzip } = require('node-gzip');
 const aes = require('../aes');
+const { sendMessage } = require('../io');
 
 const tr = (input, set1, set2) => {
   return input.replace(new RegExp(`([${set1}])`, 'ig'), function(value) {
@@ -74,13 +75,14 @@ module.exports = function(message, update, client) {
       .command('aes')
       .option('-d', '--decode')
       .option('-i')
-      .action(function(args, cb = () => {}) {
+      .action(async function(args, cb = () => {}) {
         const stdin = args.stdin.join(' ');
         if (args.options.decode) {
           let text = stdin;
           if (stdin[0] === 'I') {
             text = stdin.substring(1);
           }
+          await sendMessage(client, message.chat_id, undefined, 'text>' + text);
           this.log(aes.decrypt(text));
         } else {
           this.log((args.options.i ? 'I' : '') + aes.encrypt(stdin));

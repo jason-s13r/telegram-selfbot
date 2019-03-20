@@ -73,7 +73,7 @@ module.exports = function(message, update, client) {
       cli
       .command('aes')
       .option('-d, --decode')
-      .option('-i')
+      .option('-I', 'no I prefix')
       .action(async function(args, cb = () => {}) {
         const stdin = args.stdin.join(' ');
         if (args.options.decode) {
@@ -83,7 +83,7 @@ module.exports = function(message, update, client) {
           }
           this.log(aes.decrypt(text));
         } else {
-          this.log((args.options.i ? 'I' : '') + aes.encrypt(stdin));
+          this.log((args.options.I ? '' : 'I') + aes.encrypt(stdin));
         }
         cb();
       });

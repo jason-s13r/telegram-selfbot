@@ -1,5 +1,6 @@
 const bs58 = require('bs58');
 const { gzip, ungzip } = require('node-gzip');
+const aes = require('../aes');
 
 const tr = (input, set1, set2) => {
   return input.replace(new RegExp(`([${set1}])`, 'ig'), function(value) {
@@ -41,7 +42,7 @@ module.exports = function(message, update, client) {
         cb();
       });
 
-    cli
+      cli
       .command('base64', 'encode stdin to base64')
       .option('-d', '--decode')
       .action(function(args, cb = () => {}) {
@@ -56,7 +57,7 @@ module.exports = function(message, update, client) {
         cb();
       });
 
-    cli
+      cli
       .command('base58')
       .option('-d', '--decode')
       .action(function(args, cb = () => {}) {
@@ -65,6 +66,24 @@ module.exports = function(message, update, client) {
           this.log(bs58.decode(stdin).toString('ascii'));
         } else {
           this.log(bs58.encode(Buffer.from(stdin)));
+        }
+        cb();
+      });
+
+      cli
+      .command('aes')
+      .option('-d', '--decode')
+      .options('-i')
+      .action(function(args, cb = () => {}) {
+        const stdin = args.stdin.join(' ');
+        if (args.options.decode) {
+          let text = stdin;
+          if (stdin[0] === 'I') {
+            text = stdin.substring(1);
+          }
+          this.log(aes.decrypt(text));
+        } else {
+          this.log((args.options.i ? 'I' : '') + aes.encrypt(stdin));
         }
         cb();
       });

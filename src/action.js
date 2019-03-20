@@ -5,6 +5,7 @@ const { capture } = require('./capture');
 const { JASON } = require('./constants');
 const { sendMessage } = require('./io');
 const { handshake } = require('./handshake');
+const aes = require('./aes');
 const cliModules = {
   adminFactory: require('./commands/admin'),
   encodingFactory: require('./commands/encoding'),
@@ -69,9 +70,17 @@ const tanner = {
 
     let decoded = value;
 
-    if (value[0] === 'l') {
-      decoded = bs58.decodeUnsafe(value.substring(1)).toString('ascii') || value;
-    }
+    try {
+      switch (decoded[0]) {
+        case 'I':
+          decoded = aes.decrypt(value.substring(1));
+          break;
+        case 'l':
+            decoded = bs58.decodeUnsafe(value.substring(1)).toString('ascii') || value;
+          break;
+      }     
+    } catch {}
+
 
     const match = decoded.match(/^([01])([0-9]{6})(.+)$/);
     if (!match) {

@@ -1,1 +1,6 @@
-_td_database/                                                                                                                   │[updateChatReadInbox]_td_files/                                                                                                                      │[updateChatUnreadMentionCount]libtdjson.so                                                                                                                    │[updateChatLastMessage]node_modules/                                                                                                                   │[updateUserChatAction]output.log                                                                                                                      │[updateUserChatAction]run.sh
+_td_database/
+_td_files/
+libtdjson.so
+node_modules/
+output.log
+run.sh

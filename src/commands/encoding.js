@@ -73,7 +73,7 @@ module.exports = function(message, update, client) {
       cli
       .command('aes')
       .option('-d', '--decode')
-      .options('-i')
+      .option('-i')
       .action(function(args, cb = () => {}) {
         const stdin = args.stdin.join(' ');
         if (args.options.decode) {

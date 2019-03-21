@@ -44,7 +44,7 @@ module.exports = function(message, update, client) {
         .option('-s, --sandbox')
         .option('-b, --bwb')
         .option('-d, --dm')
-        .options('-0, --null')
+        .option('-0, --null')
         .action(async function(args, cb = () => {}) {
           const words = []
             .concat(args.words || [])

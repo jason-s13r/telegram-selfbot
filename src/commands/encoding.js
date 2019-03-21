@@ -12,7 +12,7 @@ const tr = (input, set1, set2) => {
 
 module.exports = function(message, update, client) {
   return function(cli, options) {
-    cli.command('tr [set1] [set2]').action(function(args, cb = () => {}) {
+    cli.command('tr <set1> <set2>').action(function(args, cb = () => {}) {
       const { set1, set2 } = args;
       const output = tr(args.stdin.join(' '), '' + set1, '' + set2);
       this.log(output);
@@ -43,7 +43,7 @@ module.exports = function(message, update, client) {
       });
 
       cli
-      .command('base64', 'encode stdin to base64')
+      .command('base64')
       .option('-d', '--decode')
       .action(function(args, cb = () => {}) {
         const stdin = args.stdin.join(' ');

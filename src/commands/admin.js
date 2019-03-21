@@ -4,9 +4,9 @@ const { handshake } = require('../handshake');
 module.exports = function(message, update, client) {
   return function(cli, options) {
     cli
-      .command('info', 'get information about a message')
+      .command('info')
       .option('-r, --raw', 'output raw JSON')
-      .option('-k, --key [value]', 'get specific JSON property')
+      .option('-k, --key <value>', 'get specific JSON property')
       .action(async function(args, cb = () => {}) {
         const lookupId = message.reply_to_message_id || message.id;
         const lookup = await getMessageDetails(client, message.chat_id, lookupId);

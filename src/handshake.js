@@ -3,6 +3,7 @@ const bs58 = require('bs58');
 
 const { JASON, TANNER, SANDBOX, HANDSHAKE } = require('./constants');
 const { sendMessage } = require('./io');
+const aes = require('./aes');
 
 class Handshake {
   constructor() {
@@ -46,7 +47,7 @@ class Handshake {
     const self = this;
     return function(cli, options) {
       cli
-        .command('handshake [key]', 'handshake with optional key parameter')
+        .command('handshake [key]')
         .action(async function(args, cb = () => {}) {
           const secret = self.execute(args.key);
           if (secret) {
@@ -70,13 +71,18 @@ class Handshake {
         });
 
       cli
-        .command('tannerboy', 'run a command on tannerboy')
-        .option('-e, --encoded', 'base58 encode the command string')
+        .command('tannerboy')
+        .option('-e, --encoded')
+        .option('-a, --aes')
         .action(function(args, cb = () => {}) {
           const prefix = self.prefix();
-          let commandLine = prefix + args.stdin.join(' ');
+          const commandString = prefix + args.stdin.join(' ');
+          let commandLine = commandString;
           if (args.options.encoded) {
-            commandLine = 'l' + bs58.encode(Buffer.from(commandLine));
+            commandLine = 'l' + bs58.encode(Buffer.from(commandString));
+          }
+          if (args.options.aes) {
+            commandLine = 'I' + aes.encrypt(commandString);
           }
           this.log(commandLine);
           cb();

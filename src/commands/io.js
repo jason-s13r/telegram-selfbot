@@ -25,7 +25,7 @@ module.exports = function(message, update, client) {
 
   return function(vorpal, options) {
     vorpal
-      .command('echo [words...]')
+      .command('echo <words...>')
       .alias('say')
       .action(function(args, cb = () => {}) {
         this.log(args.words.join(' '));
@@ -37,7 +37,7 @@ module.exports = function(message, update, client) {
       cb();
     });
 
-    vorpal.command('cat', 'get replied message text to stdout.').action(async function(args, cb = () => {}) {
+    vorpal.command('cat').action(async function(args, cb = () => {}) {
       const lookupId = message.reply_to_message_id || message.id;
       const lookup = await getMessageDetails(client, message.chat_id, lookupId);
       try {
@@ -49,7 +49,7 @@ module.exports = function(message, update, client) {
     });
 
     vorpal
-      .command('forward [chat_id]', 'redirect a message to chat_id')
+      .command('forward [chat_id]')
       .option('-d, --domothy', 'redirect to domothy')
       .option('-h, --horseshoe', 'redirect to horseshoe')
       .option('-j, --jason', 'redirect to jason')
@@ -63,7 +63,7 @@ module.exports = function(message, update, client) {
       });
 
     vorpal
-      .command('tee [chat_id]', 'copy a message to [chat_id]')
+      .command('tee [chat_id]')
       .option('-d, --domothy', 'copy to domothy')
       .option('-h, --horseshoe', 'copy to horseshoe')
       .option('-j, --jason', 'copy to jason')

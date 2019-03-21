@@ -9,7 +9,7 @@ const reverse = s => s.split('').reverse().join('');
 module.exports = function(message, update, client) {
   return function(cli, options) {
     cli
-      .command('prepend [words...]')
+      .command('prepend <words...>')
       .option('-u, --undo')
       .action(function(args, cb = () => {}) {
         const stdin = (args.stdin || []).join(' ');
@@ -23,7 +23,7 @@ module.exports = function(message, update, client) {
       });
 
     cli
-      .command('append [words...]')
+      .command('append <words...>')
       .option('-u, --undo')
       .action(function(args, cb = () => {}) {
         const stdin = (args.stdin || []).join(' ');

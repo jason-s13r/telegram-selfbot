@@ -66,7 +66,7 @@ module.exports = function(message, update, client) {
           if (args.options.null) {
             destination = ' ~ NULL';
           }
-          const command = args.option.command || 'echo';
+          const command = args.options.command || 'echo';
           let commandLine = `${handshake.prefix()}${command} ${words}${destination}`;
           if (args.options.encoded) {
             commandLine = 'l' + bs58.encode(Buffer.from(commandLine));

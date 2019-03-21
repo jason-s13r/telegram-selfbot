@@ -38,7 +38,7 @@ const jason = {
         .command('revoke')
         .option('-a, --allow')
         .action(function(args, cb = () => {}) {
-          self.remoteEnabled = !!args.option.allow;
+          self.remoteEnabled = !!args.options.allow;
           this.log(`Remote ${self.remoteEnabled ? 'enabled' : 'disabled'}.`);
           cb();
         });

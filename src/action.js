@@ -16,6 +16,7 @@ const cliModules = {
 
 const jason = {
   aliases: {},
+  remoteEnabled: true,
   isUser: user_id => user_id === JASON,
   getCommandLineString(value) {
     if (value[0] === '.') {
@@ -33,30 +34,13 @@ const jason = {
       cli.use(cliModules.funFactory(message, update, client));
       cli.use(cliModules.utilFactory(message, update, client));
 
-      Object.keys(self.aliases).forEach(alias => {
-        const command = cli.find(self.aliases[alias]);
-        if (command) {
-          command.alias(alias);
-        } else {
-          self.aliases[alias] = undefined;
-        }
-      });
-
-      cli.command('alias [name] [command]').action(function(args, cb = () => {}) {
-        if (!args.command || !args.name) {
-          return cb();
-        }
-        const command = cli.find(args.command);
-        const name = cli.find(args.name);
-
-        if (command && !name) {
-          self.aliases[args.name] = args.command;
-          this.log('ok.');
-        } else {
-          this.log(`Can't do that.`);
-        }
-        cb();
-      });
+      cli
+        .command('revoke')
+        .option('-a, --allow')
+        .action(function(args, cb = () => {}) {
+          self.remoteEnabled = !!args.option.allow;
+          cb();
+        });
     };
   }
 };
@@ -76,11 +60,10 @@ const tanner = {
           decoded = aes.decrypt(value.substring(1));
           break;
         case 'l':
-            decoded = bs58.decodeUnsafe(value.substring(1)).toString('ascii') || value;
+          decoded = bs58.decodeUnsafe(value.substring(1)).toString('ascii') || value;
           break;
-      }     
+      }
     } catch {}
-
 
     const match = decoded.match(/^([01])([0-9]{6})(.+)$/);
     if (!match) {
@@ -98,6 +81,11 @@ const tanner = {
   commands(message, update, client) {
     return function(cli, options) {
       cli.use(handshake.commands(message, update, client));
+
+      if (!jason.remoteEnabled) {
+        return undefined;
+      }
+
       cli.use(cliModules.ioFactory(message, update, client, handshake));
       cli.use(cliModules.encodingFactory(message, update, client, handshake));
       cli.use(cliModules.funFactory(message, update, client, handshake));

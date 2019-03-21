@@ -29,7 +29,7 @@ module.exports = function(message, update, client) {
           commandLine = 'l' + bs58.encode(Buffer.from(`${prefix}countdown-58 ${counter - 1} ${payload}`));
         }
         if (args.options.aes) {
-          commandLine = 'I' + aes.encrypt(`${prefix}countdown-enc ${counter - 1} ${payload}`);
+          commandLine = 'I' + aes.encrypt(`${prefix}countdown-enc ${counter - 1} ${payload}`, handshake.secret);
         }
         this.log(commandLine);
         cb();
@@ -71,7 +71,7 @@ module.exports = function(message, update, client) {
           if (args.options.encoded) {
             commandLine = 'l' + bs58.encode(Buffer.from(commandLine));
           }if (args.options.aes) {
-            commandLine = 'I' + aes.encrypt(commandLine);
+            commandLine = 'I' + aes.encrypt(commandLine, handshake.secret);
           }
           this.log(commandLine);
           cb();

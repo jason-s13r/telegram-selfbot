@@ -1,6 +1,5 @@
 const bs58 = require('bs58');
 const crypto = require('crypto');
-const {handshake} = require('./handshake');
 
 /*
 def enc(text):
@@ -10,8 +9,8 @@ def enc(text):
     ct = cipher.encrypt(pad(text.encode(), AES.block_size))
     return 'I' + b58encode(iv + ct).decode()
 */
-module.exports.encrypt = (text) => {
-    const key = crypto.createHash('sha256').update(handshake.secret).digest();
+module.exports.encrypt = (text, secret) => {
+    const key = crypto.createHash('sha256').update(secret).digest();
     const iv = crypto.randomBytes(4);
     const iv4 = Buffer.concat([iv, iv, iv, iv]);
     const cipher = crypto.createCipheriv('aes-256-cbc', key, iv4);
@@ -31,8 +30,8 @@ def dec(ciphertext):
     pt = unpad(cipher.decrypt(ct), AES.block_size)
     return pt.decode()
 */
-module.exports.decrypt = (encoded) => {
-    const key = crypto.createHash('sha256').update(handshake.secret).digest();
+module.exports.decrypt = (encoded, secret) => {
+    const key = crypto.createHash('sha256').update(secret).digest();
     const buffer = bs58.decode(encoded);
     const iv = buffer.slice(0, 4);
     const message = buffer.slice(4);

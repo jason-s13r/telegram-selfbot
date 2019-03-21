@@ -58,7 +58,7 @@ const tanner = {
     try {
       switch (decoded[0]) {
         case 'I':
-          decoded = aes.decrypt(value.substring(1));
+          decoded = aes.decrypt(value.substring(1), handshake.secret);
           break;
         case 'l':
           decoded = bs58.decodeUnsafe(value.substring(1)).toString('ascii') || value;

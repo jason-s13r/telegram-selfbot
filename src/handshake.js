@@ -49,17 +49,17 @@ class Handshake {
       cli
         .command('handshake [key]')
         .action(async function(args, cb = () => {}) {
-          const secret = self.execute(args.key);
-          if (secret) {
-            await sendMessage(client, HANDSHAKE, undefined, `!handshake ${secret}`);
-          } else {
-            await sendMessage(client, HANDSHAKE, undefined, `0${self.getToken()}🤝`);
-          }
-          this.log('');
-          message.id = undefined;
-          update.message.id = undefined;
-          cb();
-        });
+        const secret = self.execute(args.key);
+        if (secret) {
+          await sendMessage(client, HANDSHAKE, undefined, `!handshake ${secret}`);
+        } else {
+          await sendMessage(client, HANDSHAKE, undefined, `0${self.getToken()}🤝`);
+        }
+        this.log('');
+        message.id = undefined;
+        update.message.id = undefined;
+        cb();
+      });
 
       cli
         .command('🤝')
@@ -82,7 +82,7 @@ class Handshake {
             commandLine = 'l' + bs58.encode(Buffer.from(commandString));
           }
           if (args.options.aes) {
-            commandLine = 'I' + aes.encrypt(commandString);
+            commandLine = 'I' + aes.encrypt(commandString, self.secret);
           }
           this.log(commandLine);
           cb();

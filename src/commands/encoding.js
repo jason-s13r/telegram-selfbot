@@ -81,9 +81,9 @@ module.exports = function(message, update, client) {
           if (stdin[0] === 'I') {
             text = stdin.substring(1);
           }
-          this.log(aes.decrypt(text));
+          this.log(aes.decrypt(text, handshake.secret));
         } else {
-          this.log((args.options.I ? '' : 'I') + aes.encrypt(stdin));
+          this.log((args.options.I ? '' : 'I') + aes.encrypt(stdin, handshake.secret));
         }
         cb();
       });

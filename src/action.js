@@ -39,6 +39,7 @@ const jason = {
         .option('-a, --allow')
         .action(function(args, cb = () => {}) {
           self.remoteEnabled = !!args.option.allow;
+          this.log(`Remote ${self.remoteEnabled ? 'enabled' : 'disabled'}.`);
           cb();
         });
     };

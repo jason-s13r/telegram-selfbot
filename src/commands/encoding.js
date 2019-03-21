@@ -1,6 +1,7 @@
 const bs58 = require('bs58');
 const { gzip, ungzip } = require('node-gzip');
 const aes = require('../aes');
+const { handshake } = require('../handshake');
 
 const tr = (input, set1, set2) => {
   return input.replace(new RegExp(`([${set1}])`, 'ig'), function(value) {

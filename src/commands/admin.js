@@ -1,5 +1,18 @@
-const { getMessageDetails } = require('../io');
+const { CronJob, CronTime } = require('cron');
+
+const { LOG, SANDBOX } = require('../constants');
+const { getMessageDetails, sendMessage } = require('../io');
 const { handshake } = require('../handshake');
+
+const MINUTE = 60000
+const HALF_MINUTE = 30000;
+
+let interval = null;
+const jobs = {};
+
+async function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 module.exports = function(message, update, client) {
   return function(cli, options) {
@@ -33,6 +46,53 @@ module.exports = function(message, update, client) {
             `chat_id: ${lookup.chat_id}`
           ].join('\n')
         );
+        return cb();
+      });
+
+    cli
+      .command('job <minute>')
+      .action(async function(args, cb = () => {}) {
+        const minute = args.minute;
+        const stdin = args.stdin.join(' ');
+        jobs[minute] = jobs[minute] || [];
+        jobs[minute].push(stdin);
+        this.log(`Added :${minute} job.`);
+        this.log(`> ${stdin}`);
+
+        if (!interval) {
+          interval = setInterval(async () => {
+            const minute = new Date().getMinutes();
+            const work = jobs[minute];
+            if (!work) {
+              return;
+            }
+            for (const command of work) {
+              await sleep(Math.floor(Math.random() * 10000) + 1000);
+              await sendMessage(client, LOG, undefined, command);
+            }
+          }, MINUTE);
+          this.log('started.');
+        }
+        return cb();
+      });
+
+    cli
+      .command('delay <seconds>')
+      .action(async function(args, cb = () => {}) {
+        const seconds = (args.seconds || 30);
+        const stdin = args.stdin.join(' ');
+
+        if (!stdin) {
+          this.log('nothing to delay.');
+          return cb();
+        }
+
+        const timeout = setTimeout(() => {
+          sendMessage(client, LOG, undefined, stdin);
+        }, seconds * 1000);
+
+        this.log(`Delay set for ${seconds}s.`);
+        this.log(`> ${stdin}`);
         return cb();
       });
   };

@@ -12,6 +12,7 @@
   "dependencies": {
     "bs58": "^4.0.1",
     "capture-console": "^1.0.1",
+    "cron": "^1.7.1",
     "minimist": "^1.2.0",
     "node-gzip": "^1.1.2",
     "otplib": "^10.0.1",

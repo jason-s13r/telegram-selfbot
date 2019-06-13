@@ -1,4 +1,4 @@
-const { JASON, TANNER, DOMOTHY, HORSESHOE, SANDBOX } = require('../constants');
+const { JASON, TANNER, DOMOTHY, HORSESHOE, SANDBOX, WARBOT } = require('../constants');
 const { sendMessage, getMessageDetails } = require('../io');
 
 module.exports = function(message, update, client) {
@@ -19,6 +19,9 @@ module.exports = function(message, update, client) {
     }
     if (args.options.sandbox) {
       chat_id = SANDBOX;
+    }
+    if (args.options.war) {
+      chat_id = WARBOT;
     }
     await sendMessage(client, chat_id, undefined, stdin);
   };
@@ -55,6 +58,7 @@ module.exports = function(message, update, client) {
       .option('-j, --jason', 'redirect to jason')
       .option('-t, --tanner', 'redirect to tanner')
       .option('-s, --sandbox', 'redirect to sandbox')
+      .option('-w, --war')
       .alias('>')
       .action(async function(args, cb = () => {}) {
         this.log('');
@@ -69,6 +73,7 @@ module.exports = function(message, update, client) {
       .option('-j, --jason', 'copy to jason')
       .option('-t, --tanner', 'copy to tanner')
       .option('-s, --sandbox', 'redirect to sandbox')
+      .option('-w, --war')
       .action(async function(args, cb = () => {}) {
         this.log(args.stdin.join(' '));
         await forward(args);
